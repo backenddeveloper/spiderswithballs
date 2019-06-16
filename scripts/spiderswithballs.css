@@ -1,0 +1,15 @@
+#canvas
+{
+    border: 1px solid grey;
+}
+
+/*@media (min-width: 512px) and (max-width: 1024px)
+{*/
+    #canvas
+    {
+        position: relative;
+        left: 5%;
+        width: 90%;
+        height: 56.25vw;
+    }
+/*}*/
