@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Go wasm</title>
+    </head>
+    
+    <body>
+        <script src="wasm_exec.js"></script>
+        <script>
+
+            const go = new Go();
+    
+            async function run()
+            {
+                const response = await fetch("spiderswithballs.wasm");
+                const buffer = await response.arrayBuffer();
+                const test = await WebAssembly.instantiate(buffer, go.importObject);
+                await go.run(test.instance);
+            }
+        </script>
+    
+    </body>
+
+</html>
