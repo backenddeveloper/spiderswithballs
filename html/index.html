@@ -4,15 +4,16 @@
     <head>
         <title>Spiders With Balls | Open Source webassembly game</title>
 
-        <link rel="stylesheet" type="text/css" href="scripts/spiderswithballs.css">
-        <script src="scripts/wasm_exec.js"></script>
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="spiderswithballs.css">
+        <script src="wasm_exec.js"></script>
         <script>
 
             const go = new Go();
     
             async function run()
             {
-                const response = await fetch("scripts/spiderswithballs.wasm");
+                const response = await fetch("spiderswithballs.wasm");
                 const buffer = await response.arrayBuffer();
                 const test = await WebAssembly.instantiate(buffer, go.importObject);
                 await go.run(test.instance);
@@ -21,14 +22,14 @@
 
     </head>
     
-    <body>
+    <body onload="run()">
 
         <div id="header">
             <p>Introducing Spiders with Balls</p>
             <p></p>
         </div>
 
-        <canvas id="canvas" height=4096 width=4096>
+        <canvas id="canvas" height=2048 width=2048>
             <p>Unfortunately your browser does not support the HTML5 canvas</p>
             <p>The canvas is required to run this game</p>
             <p>Please download a <a href='https://caniuse.com/#search=canvas'>compatible browser</a></p>
