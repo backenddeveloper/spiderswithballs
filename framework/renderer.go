@@ -1,5 +1,7 @@
 package framework
 
+import "sync"
+
 //newSpriteList sets the maximum number of sprites which can be drawn in one frame
 func newSpriteList() []*Sprite {
 	return make([]*Sprite, 0, 8192)
@@ -9,6 +11,7 @@ func newSpriteList() []*Sprite {
 type Renderer struct {
 	canvas              *Canvas
 	spritesToBeRendered []*Sprite
+    mux *sync.Mutex
 }
 
 //NewRenderer returns a renderer that wraps a canvas
@@ -16,6 +19,7 @@ func NewRenderer(canvas *Canvas) *Renderer {
 	return &Renderer{
 		canvas,
 		newSpriteList(),
+        &sync.Mutex{},
 	}
 }
 
@@ -28,6 +32,10 @@ func (r *Renderer) AddSprite(s *Sprite) int {
 
 //Render draws all of the sprites' assets onto the canvas
 func (r *Renderer) Render() bool {
+
+    // we don't want anything writing to the sprites list when rendering
+    r.mux.Lock()
+    defer r.mux.Unlock()
 
 	// first we clear the canvas
 	r.canvas.Clear()
@@ -42,4 +50,10 @@ func (r *Renderer) Render() bool {
 	r.spritesToBeRendered = newSpriteList()
 
 	return true
+}
+
+//RenderForever renders the renderer using the window's animation frame scheduler
+func (r *Renderer) RenderForever() {
+    r.Render()
+    WindowAnimationFrame(r.RenderForever)
 }

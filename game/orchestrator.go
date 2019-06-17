@@ -19,51 +19,24 @@ func Start(canvas *framework.Canvas) bool {
 
     renderer := framework.NewRenderer(canvas)
 
-    soccerball := &framework.Sprite{
-        assets["soccerball"],
-        20,
-        35,
-        9,
-        16,
-        10,
-        8,
-    }
+    soccerball := framework.NewSprite(assets["soccerball"], 20, 35, 9, 16, 10, 8, 1, 0.6)
 
-    framework.WindowAnimationFrame(moveFootball(renderer, soccerball))
-    time.Sleep(1e7)
+    framework.WindowAnimationFrame(
+        func(...interface{}) interface{} {
+            renderer.AddSprite(soccerball)
+            renderer.Render()
+            framework.WindowAnimationFrame(moveFootball(renderer, soccerball))
+            return true
+        })
     go updateSoccerBall(soccerball)
 
     return true
 }
 
-func moveFootball(renderer *framework.Renderer, soccerball *framework.Sprite) framework.AnimationCallback {
+func updateSoccerBall(soccerball *framework.Particle) {
 
-    return func(...interface{}) interface{} {
-
-        renderer.AddSprite(soccerball)
-        renderer.Render()
-        framework.WindowAnimationFrame(moveFootball(renderer, soccerball))
-        return true
+    for {
+        time.Sleep(1e7)
+        soccerball.Update()
     }
-}
-
-func updateSoccerBall(soccerball *framework.Sprite) {
-
-    // make the ball bounce off the walls
-    if soccerball.PositionX <= 0 {
-        soccerball.SetXSpeed(-soccerball.SpeedX)
-    }
-    if soccerball.PositionX >= (100 - soccerball.Width) {
-        soccerball.SetXSpeed(-soccerball.SpeedX)
-    }
-    if soccerball.PositionY <= 0 {
-        soccerball.SetYSpeed(-soccerball.SpeedY)
-    }
-    if soccerball.PositionY >= (100 - soccerball.Height) {
-        soccerball.SetYSpeed(-soccerball.SpeedY)
-    }
-    soccerball.Update()
-
-    time.Sleep(1e7)
-    defer updateSoccerBall(soccerball)
 }
