@@ -46,14 +46,15 @@ func (r *Renderer) Render() bool {
 		r.canvas.Draw(sprite.Asset, sprite.PositionX, sprite.PositionY, sprite.Width, sprite.Height)
 	}
 
-	// then we clear the sprites list ready for the next frame
-	r.spritesToBeRendered = newSpriteList()
+//	// then we clear the sprites list ready for the next frame
+//	r.spritesToBeRendered = newSpriteList()
 
 	return true
 }
 
 //RenderForever renders the renderer using the window's animation frame scheduler
-func (r *Renderer) RenderForever() {
+func (r *Renderer) RenderForever(...interface{}) interface{} {
     r.Render()
-    WindowAnimationFrame(r.RenderForever)
+    defer WindowAnimationFrame(r.RenderForever)
+    return true
 }

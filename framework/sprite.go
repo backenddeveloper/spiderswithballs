@@ -56,12 +56,12 @@ func (s *Sprite) SetYSpeed (y float64) {
 }
 
 //ChangeGravity sets the gravitational co-efficient
-func (p *Sprite) ChangeGravity(g float64) {
+func (s *Sprite) ChangeGravity(g float64) {
     s.GravitationalConstant = g
 }
 
 //ChangeElasticity sets the coefficient of restitution
-func (p *Sprite) ChangeElasticity (c float64) {
+func (s *Sprite) ChangeElasticity (c float64) {
     s.CoefficientOfRestitution = c
 }
 
@@ -78,15 +78,15 @@ func (s *Sprite) Update() {
     // if the sprite attempts to go below impact with the floor it bounces
     // we also check it is moving in a downwards direction to prevent a sprite 
     // rendered below the floor from vibrating.
-    if s.PositionY >= (100 - s.Height) && s.SpeedY > 0 {
+    if s.PositionY >= (100 - s.Height) && s.SpeedY > 0.001 {
 
         // https://en.wikipedia.org/wiki/Coefficient_of_restitution
         s.SetYSpeed(-s.SpeedY * s.CoefficientOfRestitution)
 
     }
     // This updates the Sprite's position
-    s.PositionX += p.SpeedX
-    s.PositionY += p.SpeedY
+    s.PositionX += s.SpeedX
+    s.PositionY += s.SpeedY
 }
 
 //NewSprite creates a new Sprite
