@@ -11,7 +11,7 @@ func newSpriteList() []*Sprite {
 type Renderer struct {
 	canvas              *Canvas
 	spritesToBeRendered []*Sprite
-    mux *sync.Mutex
+	mux                 *sync.Mutex
 }
 
 //NewRenderer returns a renderer that wraps a canvas
@@ -19,7 +19,7 @@ func NewRenderer(canvas *Canvas) *Renderer {
 	return &Renderer{
 		canvas,
 		newSpriteList(),
-        &sync.Mutex{},
+		&sync.Mutex{},
 	}
 }
 
@@ -33,9 +33,9 @@ func (r *Renderer) AddSprite(s *Sprite) int {
 //Render draws all of the sprites' assets onto the canvas
 func (r *Renderer) Render() bool {
 
-    // we don't want anything writing to the sprites list when rendering
-    r.mux.Lock()
-    defer r.mux.Unlock()
+	// we don't want anything writing to the sprites list when rendering
+	r.mux.Lock()
+	defer r.mux.Unlock()
 
 	// first we clear the canvas
 	r.canvas.Clear()
@@ -46,15 +46,15 @@ func (r *Renderer) Render() bool {
 		r.canvas.Draw(sprite.Asset, sprite.PositionX, sprite.PositionY, sprite.Width, sprite.Height)
 	}
 
-//	// then we clear the sprites list ready for the next frame
-//	r.spritesToBeRendered = newSpriteList()
+	//	// then we clear the sprites list ready for the next frame
+	//	r.spritesToBeRendered = newSpriteList()
 
 	return true
 }
 
 //RenderForever renders the renderer using the window's animation frame scheduler
 func (r *Renderer) RenderForever(...interface{}) interface{} {
-    r.Render()
-    defer WindowAnimationFrame(r.RenderForever)
-    return true
+	r.Render()
+	defer WindowAnimationFrame(r.RenderForever)
+	return true
 }

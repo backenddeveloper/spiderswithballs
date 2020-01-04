@@ -15,7 +15,7 @@ func main() {
 
 	element := js.Global().Get("document").Call("getElementById", "canvas")
 	canvas := framework.NewCanvas(element)
-    go game.Start(canvas)
+	go game.Start(canvas)
 
 	<-runForever
 }

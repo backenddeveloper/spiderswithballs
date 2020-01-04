@@ -12,11 +12,11 @@ type AnimationCallback func(...interface{}) interface{}
 // render sprites onto the screen.
 func WindowAnimationFrame(callback AnimationCallback) {
 
-    jsCallback := func(this js.Value, args []js.Value) interface{} {
-        callback()
-        return true
-    }
+	jsCallback := func(this js.Value, args []js.Value) interface{} {
+		callback()
+		return true
+	}
 
-    js.Global().Call("requestAnimationFrame", js.FuncOf(jsCallback))
-    return
+	js.Global().Call("requestAnimationFrame", js.FuncOf(jsCallback))
+	return
 }
