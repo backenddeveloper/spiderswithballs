@@ -1,6 +1,6 @@
 package framework
 
-//World is a collection of sprites and a Physics model for them colliding
+//World is a collection of sprites and the Physics model for sprites colliding
 type World struct {
 	SpriteList []*Sprite
 }
