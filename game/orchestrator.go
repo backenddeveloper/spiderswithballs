@@ -19,8 +19,8 @@ func Start(canvas *framework.Canvas) bool {
 	renderer := framework.NewRenderer(canvas)
 	renderer.RenderForever()
 
-    ballWorld := framework.NewWorld()
-    renderer.AddWorld(ballWorld)
+	ballWorld := framework.NewWorld()
+	renderer.AddWorld(ballWorld)
 
 	soccerball := framework.NewSprite(assets["soccerball"], 0, 0, 4.5, 8, 0.2, 0.01, 0.6, 0.01)
 	football := framework.NewSprite(assets["football"], 100, 0, 4.5, 8, -0.2, 0.01, 0.6, 0.01)

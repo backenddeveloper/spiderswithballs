@@ -11,7 +11,7 @@ type Sprite struct {
 	SpeedY                   float64
 	CoefficientOfRestitution float64
 	GravitationalConstant    float64
-    Mass					 float64
+	Mass                     float64
 }
 
 //SetXPosition sets the Sprite's X position

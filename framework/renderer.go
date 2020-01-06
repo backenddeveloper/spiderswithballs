@@ -4,9 +4,9 @@ import "sync"
 
 //Renderer wraps the canvas and stacks up worlds to be drawn onto the canvas
 type Renderer struct {
-	canvas				*Canvas
-	worldsToBeRendered	[]*World
-	mux                 *sync.Mutex
+	canvas             *Canvas
+	worldsToBeRendered []*World
+	mux                *sync.Mutex
 }
 
 //NewRenderer returns a renderer that wraps a canvas
