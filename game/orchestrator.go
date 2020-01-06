@@ -19,18 +19,23 @@ func Start(canvas *framework.Canvas) bool {
 	renderer := framework.NewRenderer(canvas)
 	renderer.RenderForever()
 
-	soccerball := framework.NewSprite(assets["football"], 100, 0, 4.5, 8, -0.2, 0.01, 0.6, 0.01)
-	renderer.AddSprite(soccerball)
+    ballWorld := framework.NewWorld()
+    renderer.AddWorld(ballWorld)
 
-	go updateSoccerBall(soccerball)
+	soccerball := framework.NewSprite(assets["soccerball"], 0, 0, 4.5, 8, 0.2, 0.01, 0.6, 0.01)
+	football := framework.NewSprite(assets["football"], 100, 0, 4.5, 8, -0.2, 0.01, 0.6, 0.01)
+	ballWorld.AddSprite(soccerball)
+	ballWorld.AddSprite(football)
+
+	go updateBalls(ballWorld)
 
 	return true
 }
 
-func updateSoccerBall(soccerball *framework.Sprite) {
+func updateBalls(w *framework.World) {
 
 	for {
-		time.Sleep(5e6)
-		soccerball.Update()
+		time.Sleep(5e5)
+		w.Update()
 	}
 }

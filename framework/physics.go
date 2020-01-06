@@ -6,63 +6,61 @@ func (s *Sprite) resolveCollisionWith (o *Sprite) {
 
 	// Here we take a mean average of the two coefficients of restitution
 	// https://en.wikipedia.org/wiki/Coefficient_of_restitution
-	// This is roughly in line with how real physics works
-	e := (s.e + o.e) / 2
+	// This is roughly in line with how real solid body physics works
+	CoefficientOfRestitution := (s.CoefficientOfRestitution + o.CoefficientOfRestitution) / 2
 
-	// the collison ratio is the fraction of the distance between the two surfaces at which the collision occurs
+    // first we find collisions in the X axes
+    // there are 2 possible collisions that could occur,
+    // "S on the left of O" and "S on the right of O"
+    collisionLeftX := collisionTime((s.PositionX + s.Width), s.SpeedX, o.PositionX, o.SpeedX)
+    collisionRightX := collisionTime(s.PositionX, s.SpeedX, (o.PositionX + o.Width), o.SpeedX)
 
-	// S |-----X--------------| O
-	collidesX, ratioX, positionX := collisionLocation(s.PositionX, s.Width, s.SpeedX, o.PositionX, o.Width, o.SpeedX)
-
-	// S |-----Y--------------| O
-	collidesY, ratioY, positionY := collisionLocation(s.PositionY, s.Width, s.SpeedY, o.PositionY, o.Width, o.SpeedY)
-
-	// if the two sprites collide in both the x and y planes
-	if collidesX && collidesY {
-
-		// here we 
-	}
+    // then we find collisions in the Y axes
+    // there are 2 possible collisions that could occur,
+    // "S above O" and "S below O"
+    collisionAboveY := collisionTime((s.PositionY + s.Height), s.SpeedY, o.PositionY, o.SpeedY)
+    collisionBelowY := collisionTime(s.PositionY, s.SpeedY, (o.PositionY + o.Height), o.SpeedY)
 }
 
-// Find any collisions in the X direction
-func collisionLocation (sPosition, sWidth, sSpeed, oPosition, oWidth, oSpeed float64) collides bool, collisionRatio, collisionPosition, collisionCorrection float64 {
+//collisionTime solves a pair of linear equations that determines the time of intersection
+func collisionTime (sPosition, sSpeed, oPosition, oSpeed float64) (intersectionTime float64) {
 
-	// if S is to the left of O
-	if sPosition + sWidth < oPosition {
+    // POSITION_s(time) = (s.Speed * time) + s.Position
+    // POSITION_o(time) = (o.Speed * time) + o.Position
+    // In a collision POSITION_s == POSITION_o
+    // =>
+    // (s.Speed * time) + s.Position == (o.Speed * time) + o.Position
+    // =>
+    // time == (o.Position - s.Position) / (s.Speed - o.Speed)
+    return (oPosition - sPosition) / (sSpeed - oSpeed)
+}
 
-		// if the relative speed between them is greater than the distance
-		if (sSpeed - oSpeed) > (oPosition - (sPosition + sWidth)) {
+//earliestCollision finds the earliest collision out of 2 in the time interval (0, 1]
+func earliestCollision (l, r float64) (collision float64) {
 
-			// we note that a collision takes place
-			collides = true
+	// if both are in the interval
+	if l > 0 && l < 1 && r > 0 && r < 1 {
 
-			// this is the fraction of the distance between the two surfaces at which the collision occurs
-			// S |-----X--------------| O
-			collisionRatio = ((oPosition - (sPosition + sWidth)) / (sSpeed - oSpeed)) + (sPosition + sWidth)
-			collisionPosition = (1 - collisionRatio)*(sPosition + sWidth) + oPosition
-			collisionCorrection = collisionPosition - oPosition
+		// if right is smaller
+		if r < l {
+			return r
+
+		// else left is smaller or both are equal
+		} else {
+			return l
 		}
 
-	// if O is to the left of S
-	} else if oPosition + oWidth < sPosition {
+	// if  just l is in the interval
+	} else if l > 0 && l < 1 {
+		return l
 
-		// if the relative speed between them is greater than the distance
-		if (oSpeed - sSpeed) > (sPosition - (oPosition + oWidth)) {
+	// if just r is in the interval
+	} else if r > 0 && r < 1 {
+		return r
 
-			// we note that a collision takes place
-			collides = true
-
-			// this is the fraction of the distance between the two surfaces at which the collision occurs
-			// O |-----X--------------| S
-			collisionRatio = ((sPosition - (oPosition + oWidth)) / (oSpeed - sSpeed)) + (oPosition + oWidth)
-			collisionPosition = (1 - collisionRatio)*(oPosition + oWidth) + sPosition
-			collisionCorrection = collisionPosition - sPosition
-		}
-
-	// else there is initial overlap, this indicates a 'normal angle' collision 
+	// else neither are in the interval
 	} else {
-
-		// Sprites really shouldn't be moving this fast!
-		collides = true
+		return -1
 	}
+
 }

@@ -3,8 +3,10 @@ default:
 clean:
 	find . -name *.wasm -delete
 
-build:
+compile:
 	GOOS=js GOARCH=wasm go build -ldflags="-s -w" -o html/spiderswithballs.wasm
+
+build: compile
 	docker build -t backenddeveloper/spiderswithballs:$$(git rev-parse --verify HEAD) .
 	docker tag backenddeveloper/spiderswithballs:$$(git rev-parse --verify HEAD) backenddeveloper/spiderswithballs:latest
 

@@ -23,6 +23,11 @@ func NewCanvas(element js.Value) *Canvas {
 //Draw draws an asset onto the canvas at a position and size measured in percentage
 func (c *Canvas) Draw(a *Asset, x, y, width, height float64) {
 
+    // if the sprite is not on the canvas it makes no sense to render it
+    if x > 100 || x < (0 - width) || y > 100 || y < (0 - height) {
+        return
+    }
+
 	// convert percentages to pixels
 	x = x * (c.width / 100)
 	y = y * (c.height / 100)
