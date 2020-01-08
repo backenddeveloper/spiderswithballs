@@ -44,7 +44,7 @@ func (w *World) Update() {
 			if s != o {
 
 				// resolve collisions
-				s.resolveCollisionWith(o)
+				s.findCollisionWith(o)
 			}
 		}
 
